@@ -1,5 +1,28 @@
 Estructura del proyecto
 
+	Interfaces base
+
+	Interfaz ICarta
+Métodos:
+  MostrarCarta()
+  GetValorNumerico()
+
+Interfaz IJugador
+Métodos:
+  RecibirCarta(Carta c)
+  MostrarMano()
+  TomarDecision()
+  ObtenerPuntos()
+  GetNombre()
+
+Interfaz IJuego
+Métodos:
+  IniciarJuego()
+  RepartirCartas()
+  JugarTurno()
+  MostrarEstado()
+  DeterminarGanador()
+
   CLASES BASES
 
   Clase Carta
@@ -10,21 +33,23 @@ Atributos:
   tipo : string
 Métodos:
   MostrarCarta()
-  GetValorNumerico() → virtual (dependiendo del tipo de carta)
+  Virtual GetValorNumerico()  (dependiendo del tipo de carta)
 
-            Clase Jugador
+            Clase Jugador : IJugador
 Atributos:
   nombre : string
   idJugador : int
   mano : List<Carta>
-  puntos : int
+	puntos : int
+	estrategia: IEstrategiaJugador
 Métodos:
   RecibirCarta(Carta c)
   MostrarMano()
-  TomarDecision() = abstracto 
-  JugarCarta() (solo se usa en UNO)
+  TomarDecision() 
+	abstract obtenerPuntos()
+	GetNombre()
 
-            Clase Juego
+            Clase Juego: IJuego
 Atributos:
   nombreJuego : string
   jugadores : List<Jugador>
@@ -34,9 +59,37 @@ Atributos:
 Métodos:
   IniciarJuego()
   RepartirCartas()
-  SiguienteTurno()
+  Virtual JugarTurno()
   MostrarEstado()
   DeterminarGanador()
+
+			Comportamiento de los jugadores (Estrategia)
+Interfaz IEstrategiaJugador
+Metodos:
+  TomarDecision(Jugador jugador, Juego juego)
+
+Clase EstrategiaAleatoria : IEstrategiaJugador
+Metodos:
+  TomarDecision(Jugador jugador, Juego juego)
+
+Clase EstrategiaCalculadora : IEstrategiaJugador
+Metodos:
+  TomarDecision(Jugador jugador, Juego juego)
+
+Clase EstrategiaCautelosa : IEstrategiaJugador
+Atributos:
+  limitePuntos : int
+Metodos:
+  TomarDecision(Jugador jugador, Juego juego)
+
+Clase EstrategiaTemeraria : IEstrategiaJugador
+Metodos:
+  TomarDecision(Jugador jugador, Juego juego)
+
+			Creacion de jugadores
+Clase CreadorDeJugadores
+	Metodos:
+CrearJugador(tipo : string, nombre : string, estrategia : IEstrategiaJugador) -> IJugador
 
 			UNO 
 
@@ -50,77 +103,61 @@ Métodos:
 AplicarEfecto(JuegoUNO juego, JugadorUNO siguiente)
 
 
-	Clase JugadorUNO (hereda de Jugador)
+	Clase JugadorUNO : Jugador
 
 Métodos:
-TomarDecision()
 ObtenerCartasValidas()
 JugarCartaValida()
+override ObtenerPuntos()
 
 
-	Clase JugadorAleatorio (hereda de JugadorUNO)
-
-Métodos:
-TomarDecision()
-
-	Clase JugadorCalculador (hereda de JugadorUNO)
-
-Métodos:
-EvaluarSiguienteJugador()
-TomarDecision() 
-
-	Clase JuegoUNO (hereda de Juego)
-
+	Clase JuegoUNO:Juego
 Atributos:
 sentidoHorario : bool
-
 Métodos:
-JugarTurno()
+override IniciarJuego()
+override JugarTurno()
 AplicarEfectoCarta()
-VerificarGanador()
+override DetermianarJugadorGanador()
+override MostrarEstado()
 
-BLACKJACK
 
-Clase CartaPoker (hereda de Carta)
+			BLACKJACK
 
+Clase CartaPoker: Carta
 Atributos:
 figura : string (espadas, corazones, diamantes o tréboles)
 
 Métodos:
-GetValorNumerico() → devuelve puntaje (2–10, J/Q/K = 10, As = 1 u 11)
-Clase JugadorBlackjack (hereda de Jugador)
-
+override GetValorNumerico() → devuelve puntaje (2–10, J/Q/K = 10, As = 1 u 11)
+Clase JugadorBlackjack:Jugador
 Métodos:
 CalcularPuntaje()
-TomarDecision() (depende del tipo de jugador)
+override ObtenerPuntos()
 
-Clase JugadorCauteloso (hereda de JugadorBlackjack)
-
-Atributos:
-limitePuntos : int
-
-Métodos:
-TomarDecision() → pide carta hasta alcanzar o superar el límite
-
-Clase JugadorTemerario (hereda de JugadorBlackjack)
-
-Métodos:
-TomarDecision() → pide cartas hasta sacar 21 o pasarse
-
-Clase Dealer (hereda de JugadorBlackjack)
+Clase Dealer: JugadorBlackjack
 
 Métodos:
 BarajarMazo()
 RepartirCartas()
-TomarDecision() → saca cartas hasta tener 17 o más puntos
+override TomarDecision() → saca cartas hasta tener 17 o más puntos
 
-Clase JuegoBlackjack (hereda de Juego)
-
+Clase JuegoBlackjack: Juego
 Atributos:
 dealer : Dealer
 rondas : int
-
 Métodos:
+override IniciarJuego()
 JugarRonda()
-CalcularPuntos(Jugador j)
+CalcularPuntos(Jugador J)
 CompararConDealer()
+override DeterminarGanador()
+override MOstrarEstado()
+
+
+		CLASES DE APOYO
+Class Logger
+Metodo: static Registrar(string mensaje) (para imprimir o guardar la accion en archivo
+
+Clase simulador
+metodos: Ejecutar() (aca se preguntara que juego se va acorrer, creara los jugadores usando CreadorDeJugadores y llama IniciarJuego y muestra los logs)
