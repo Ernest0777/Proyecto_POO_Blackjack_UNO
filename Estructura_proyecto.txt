@@ -95,13 +95,21 @@ CrearJugador(tipo : string, nombre : string, estrategia : IEstrategiaJugador) ->
 
 	Clase CartaUNO
 Atributos:
-
+tipoEspecial:TipoEspecialUNO (llama al Enum para identificar el tipo de carta especial en uso)
 esEspecial : bool
 efecto : string (para cartas como +2, +4, reversa, bloqueo, cambioColor)
 
 Métodos:
 AplicarEfecto(JuegoUNO juego, JugadorUNO siguiente)
-
+EsComodinVerdadero():bool (da true si la carta es +4 o Comodin)
+	
+Enum TipoEspecialUNO
+Valores:
+MasDos
+Reversa
+Bloqueo
+CambioColor
+MasCuatro	
 
 	Clase JugadorUNO : Jugador
 
