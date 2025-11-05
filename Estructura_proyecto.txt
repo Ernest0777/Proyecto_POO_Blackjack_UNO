@@ -1,1 +1,36 @@
 Estructura del proyecto
+  
+              Clase Carta
+Atributos:
+  color : string
+  valor : string
+  tipo : string
+Métodos:
+  MostrarCarta()
+  GetValorNumerico() → virtual (dependiendo del tipo de carta)
+
+            Clase Jugador
+Atributos:
+  nombre : string
+  idJugador : int
+  mano : List<Carta>
+  puntos : int
+Métodos:
+  RecibirCarta(Carta c)
+  MostrarMano()
+  TomarDecision() = abstracto 
+  JugarCarta() (solo se usa en UNO)
+
+            Clase Juego
+Atributos:
+  nombreJuego : string
+  jugadores : List<Jugador>
+  mazo : List<Carta>
+  descarte : List<Carta>
+  turnoActual : int
+Métodos:
+  IniciarJuego()
+  RepartirCartas()
+  SiguienteTurno()
+  MostrarEstado()
+  DeterminarGanador()
