@@ -1,5 +1,6 @@
 Estructura del proyecto
-  
+                                CLASES BASES
+
               Clase Carta
 Atributos:
   color : string
