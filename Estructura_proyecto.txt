@@ -1,4 +1,6 @@
 Estructura del proyecto
+
+			BLACKJACK
                                 CLASES BASES
 
               Clase Carta
@@ -35,3 +37,85 @@ Métodos:
   SiguienteTurno()
   MostrarEstado()
   DeterminarGanador()
+
+		
+
+
+			UNO 
+			CLASES BASES
+
+ 	Clase Carta
+Atributos:
+  color : string
+  valor : string
+  tipo : string
+
+Métodos:
+  MostrarCarta()
+  
+ Clase Jugador
+Atributos:
+  nombre : string
+  idJugador : int
+  mano : List<Carta>
+  
+Métodos:
+  RecibirCarta(Carta c)
+  TomarDecision() = abstracto 
+  JugarCarta() 
+
+            Clase Juego
+Atributos:
+  nombreJuego : string
+  jugadores : List<Jugador>
+  mazo : List<Carta>
+  descarte : List<Carta>
+  turnoActual : int
+
+Métodos:
+  IniciarJuego()
+  RepartirCartas()
+  SiguienteTurno()
+  MostrarEstado()
+  DeterminarGanador()
+
+
+	Clase CartaUNO
+Atributos:
+
+esEspecial : bool
+efecto : string (para cartas como +2, +4, reversa, bloqueo, cambioColor)
+
+Métodos:
+AplicarEfecto(JuegoUNO juego, JugadorUNO siguiente)
+
+
+	Clase JugadorUNO (hereda de Jugador)
+
+Métodos:
+TomarDecision()
+ObtenerCartasValidas()
+JugarCartaValida()
+
+
+	Clase JugadorAleatorio (hereda de JugadorUNO)
+
+Métodos:
+TomarDecision()
+
+	Clase JugadorCalculador (hereda de JugadorUNO)
+
+Métodos:
+EvaluarSiguienteJugador()
+TomarDecision() 
+
+	Clase JuegoUNO (hereda de Juego)
+
+Atributos:
+sentidoHorario : bool
+
+Métodos:
+JugarTurno()
+AplicarEfectoCarta()
+VerificarGanador()
+
