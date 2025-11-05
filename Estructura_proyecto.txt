@@ -1,9 +1,9 @@
 Estructura del proyecto
 
-			BLACKJACK
-                                CLASES BASES
+  CLASES BASES
 
-              Clase Carta
+  Clase Carta
+
 Atributos:
   color : string
   valor : string
@@ -38,47 +38,7 @@ Métodos:
   MostrarEstado()
   DeterminarGanador()
 
-		
-
-
 			UNO 
-			CLASES BASES
-
- 	Clase Carta
-Atributos:
-  color : string
-  valor : string
-  tipo : string
-
-Métodos:
-  MostrarCarta()
-  
- Clase Jugador
-Atributos:
-  nombre : string
-  idJugador : int
-  mano : List<Carta>
-  
-Métodos:
-  RecibirCarta(Carta c)
-  TomarDecision() = abstracto 
-  JugarCarta() 
-
-            Clase Juego
-Atributos:
-  nombreJuego : string
-  jugadores : List<Jugador>
-  mazo : List<Carta>
-  descarte : List<Carta>
-  turnoActual : int
-
-Métodos:
-  IniciarJuego()
-  RepartirCartas()
-  SiguienteTurno()
-  MostrarEstado()
-  DeterminarGanador()
-
 
 	Clase CartaUNO
 Atributos:
@@ -119,3 +79,48 @@ JugarTurno()
 AplicarEfectoCarta()
 VerificarGanador()
 
+BLACKJACK
+
+Clase CartaPoker (hereda de Carta)
+
+Atributos:
+figura : string (espadas, corazones, diamantes o tréboles)
+
+Métodos:
+GetValorNumerico() → devuelve puntaje (2–10, J/Q/K = 10, As = 1 u 11)
+Clase JugadorBlackjack (hereda de Jugador)
+
+Métodos:
+CalcularPuntaje()
+TomarDecision() (depende del tipo de jugador)
+
+Clase JugadorCauteloso (hereda de JugadorBlackjack)
+
+Atributos:
+limitePuntos : int
+
+Métodos:
+TomarDecision() → pide carta hasta alcanzar o superar el límite
+
+Clase JugadorTemerario (hereda de JugadorBlackjack)
+
+Métodos:
+TomarDecision() → pide cartas hasta sacar 21 o pasarse
+
+Clase Dealer (hereda de JugadorBlackjack)
+
+Métodos:
+BarajarMazo()
+RepartirCartas()
+TomarDecision() → saca cartas hasta tener 17 o más puntos
+
+Clase JuegoBlackjack (hereda de Juego)
+
+Atributos:
+dealer : Dealer
+rondas : int
+
+Métodos:
+JugarRonda()
+CalcularPuntos(Jugador j)
+CompararConDealer()
