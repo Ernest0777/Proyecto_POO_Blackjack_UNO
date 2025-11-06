@@ -9,6 +9,6 @@ public interface IEstadoJuego
     IReadOnlyList<ICarta> Mazo { get; }
     IReadOnlyList<ICarta> Descarte { get; }
     int TurnoActual { get; }
-     string DescribirEstado();
+    string ObtenerResumen();
 
 }
