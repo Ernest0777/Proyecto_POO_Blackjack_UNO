@@ -49,15 +49,19 @@ TurnoActual : int
 
   												CLASES BASES
 
-  	Clase Carta
+  	Clase Carta : ICarta (abstracta)
 Atributos:
-color : string
-valor : string
-tipo : string
+Color : string (protected init)
+Valor : string (protected init)
+Tipo  : string (protected init)
+
+Constructor:
+Carta(color : string, valor : string, tipo : string)
 
 Métodos:
-MostrarCarta()
-Virtual GetValorNumerico()  (dependiendo del tipo de carta)
+MostrarCarta()  (imprime la representación textual de la carta en consola)
+Virtual GetValorNumerico() = int (definido en subclases según el tipo de carta)
+Override ToString() (devuelve una descripción legible de la carta) (“Valor de Color (Tipo)”)
 
     Clase Jugador : IJugador
 Atributos:
