@@ -1,11 +1,14 @@
 Estructura del proyecto
 
-	Interfaces base
-
+											Interfaces base
 	Interfaz ICarta
+Atributos:
+Color : string
+Valor : string
+Tipo : string
 Métodos:
-  MostrarCarta()
-  GetValorNumerico()
+MostrarCarta()
+GetValorNumerico() Int
 
 Interfaz IJugador
 Métodos:
@@ -28,82 +31,93 @@ EjecutarDecision(IJugador jugador, IJuego juego)
 
 Interfaz IJuego
 Métodos:
-  IniciarJuego()
-  RepartirCartas()
-  JugarTurno()
-  MostrarEstado()
-  DeterminarGanador()
+IniciarJuego()
+RepartirCartas()
+JugarTurno()
+MostrarEstado()
+DeterminarGanador()
+FinalizarJuego()
 
-  CLASES BASES
-
-  Clase Carta
-
+Interfaz IEstadoJuego
 Atributos:
-  color : string
-  valor : string
-  tipo : string
-Métodos:
-  MostrarCarta()
-  Virtual GetValorNumerico()  (dependiendo del tipo de carta)
+NombreJuego : string
+Jugadores : IReadOnlyList<IJugador>
+Mazo : IReadOnlyList<ICarta>
+Descarte : IReadOnlyList<ICarta>
+TurnoActual : int
 
-            Clase Jugador : IJugador
-Atributos:
-  nombre : string
-  idJugador : int
-  mano : List<Carta>
-	puntos : int
-	estrategia: IEstrategiaJugador
-Métodos:
-  RecibirCarta(Carta c)
-  MostrarMano()
-  TomarDecision() 
-	abstract obtenerPuntos()
-	GetNombre()
 
-            Clase Juego: IJuego
+  												CLASES BASES
+
+  	Clase Carta
 Atributos:
-  nombreJuego : string
-  jugadores : List<Jugador>
-  mazo : List<Carta>
-  descarte : List<Carta>
-  turnoActual : int
+color : string
+valor : string
+tipo : string
+
 Métodos:
-  IniciarJuego()
-  RepartirCartas()
-  Virtual JugarTurno()
-  MostrarEstado()
-  DeterminarGanador()
+MostrarCarta()
+Virtual GetValorNumerico()  (dependiendo del tipo de carta)
+
+    Clase Jugador : IJugador
+Atributos:
+nombre : string
+idJugador : int
+mano : List<Carta>
+puntos : int
+estrategia: IEstrategiaJugador
+
+Métodos:
+RecibirCarta(Carta c)
+MostrarMano()
+TomarDecision() 
+abstract obtenerPuntos()
+GetNombre()
+
+    Clase Juego: IJuego
+Atributos:
+nombreJuego : string
+jugadores : List<Jugador>
+mazo : List<Carta>
+descarte : List<Carta>
+turnoActual : int
+Métodos:
+IniciarJuego()
+RepartirCartas()
+Virtual JugarTurno()
+MostrarEstado()
+DeterminarGanador()
 
 			Comportamiento de los jugadores (Estrategia)
 Interfaz IEstrategiaJugador
 Metodos:
-  TomarDecision(Jugador jugador, Juego juego)
+TomarDecision(Jugador jugador, Juego juego)
 
-Clase EstrategiaAleatoria : IEstrategiaJugador
+	Clase EstrategiaAleatoria : IEstrategiaJugador
 Metodos:
-  TomarDecision(Jugador jugador, Juego juego)
+TomarDecision(Jugador jugador, Juego juego)
 
-Clase EstrategiaCalculadora : IEstrategiaJugador
+	Clase EstrategiaCalculadora : IEstrategiaJugador
 Metodos:
-  TomarDecision(Jugador jugador, Juego juego)
+TomarDecision(Jugador jugador, Juego juego)
 
-Clase EstrategiaCautelosa : IEstrategiaJugador
+	Clase EstrategiaCautelosa : IEstrategiaJugador
 Atributos:
-  limitePuntos : int
-Metodos:
-  TomarDecision(Jugador jugador, Juego juego)
+limitePuntos : int
 
-Clase EstrategiaTemeraria : IEstrategiaJugador
 Metodos:
-  TomarDecision(Jugador jugador, Juego juego)
+TomarDecision(Jugador jugador, Juego juego)
 
-			Creacion de jugadores
+	Clase EstrategiaTemeraria : IEstrategiaJugador
+Metodos:
+TomarDecision(Jugador jugador, Juego juego)
+
+		Creacion de jugadores
 Clase CreadorDeJugadores
-	Metodos:
+Metodos:
 CrearJugador(tipo : string, nombre : string, estrategia : IEstrategiaJugador) -> IJugador
 
-			UNO 
-
+						UNO 
 	Clase CartaUNO
 Atributos:
 tipoEspecial:TipoEspecialUNO (llama al Enum para identificar el tipo de carta especial en uso)
