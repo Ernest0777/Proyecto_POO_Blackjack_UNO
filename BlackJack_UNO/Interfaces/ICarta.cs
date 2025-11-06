@@ -8,6 +8,6 @@ public interface ICarta
     string Valor { get; }
     string Tipo { get; }
 
-     void MostrarCarta();
-     int GetValorNumerico();
+    string NombreCorto{ get; }
+    int ObtenerValorNumerico();
 }
