@@ -1,6 +1,5 @@
 using System;
 using BlackJack_1.Interfaces;
-using BlackJack_1.ModelosBase;
 namespace BlackJack_1.ModelosBase;
 
     public class Carta: ICarta
