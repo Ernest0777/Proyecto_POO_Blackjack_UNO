@@ -9,11 +9,22 @@ Métodos:
 
 Interfaz IJugador
 Métodos:
-  RecibirCarta(Carta c)
-  MostrarMano()
-  TomarDecision()
-  ObtenerPuntos()
-  GetNombre()
+RecibirCarta(ICarta carta)
+MostrarMano()
+TomarDecision(Ijuego juegoContexto)
+ObtenerPuntos()
+GetNombre()
+IReadOnlyList<ICarta>
+ReportarAccion(string mensaje)
+GetId()
+
+Propiedades:
+Estrategia : IEstrategiaJugador
+
+Interfaz IEstrategiaJugador
+Metodos:
+EjecutarDecision(IJugador jugador, IJuego juego)
+
 
 Interfaz IJuego
 Métodos:
