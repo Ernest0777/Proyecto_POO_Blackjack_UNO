@@ -10,7 +10,6 @@
   <ItemGroup>
     <Folder Include="CreadorDeJugadores\" />
     <Folder Include="Estrategias\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Juegos\" />
     <Folder Include="Juegos\Blackjack\" />
     <Folder Include="Juegos\Uno\" />
