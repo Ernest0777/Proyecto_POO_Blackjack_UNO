@@ -7,4 +7,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="CreadorDeJugadores\" />
+    <Folder Include="Estrategias\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Juegos\" />
+    <Folder Include="Juegos\Blackjack\" />
+    <Folder Include="Juegos\Uno\" />
+    <Folder Include="ModelosBase\" />
+    <Folder Include="Utilidades\" />
+  </ItemGroup>
+
 </Project>
