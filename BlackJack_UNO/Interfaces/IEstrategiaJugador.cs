@@ -1,7 +1,11 @@
-namespace BlackJack_1.Interfaces
+namespace BlackJack_1.Interfaces;
+
+public interface IEstrategiaJugador
 {
-    public interface IEstrategiaJugador
-    {
-        void EjecutarDecision(IJugador jugador, IJuego juego);
-    }
+    string DecidirAccion(IJugador jugador, IJuego juego);
+    string EjecutarDecision(IJugador jugador, IJuego juego);
+
+    string NombreEstrategia{ get;  }
+
+    string UltimaAccion{ get;  }
 }
