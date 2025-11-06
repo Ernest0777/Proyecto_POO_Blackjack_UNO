@@ -1,20 +1,23 @@
 using System.Collections.Generic;
 
-namespace BlackJack_1.Interfaces
-{
+namespace BlackJack_1.Interfaces;
+
 public interface IJugador
 {
+
+    int IdJugador { get; }
+    string Nombre { get; }
+    
         void RecibirCarta(ICarta carta);
-        void MostrarMano();
         void TomarDecision(IJuego juegoContexto);
         int ObtenerPuntos();
-        string GetNombre();
-        IReadOnlyList<ICarta> GetMano();
+        
+        IReadOnlyList<ICarta> Mano{ get; }
 
         IEstrategiaJugador Estrategia { get; set; }
 
-        void ReportarAccion(string mensaje);
+        void NotificarAccion(string mensaje);
 
-        int GetId();
-    }
+    event Action<string>? OnAccionReportada;
 }
+
