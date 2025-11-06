@@ -16,12 +16,32 @@ namespace BlackJack_1.ModelosBase;
             Tipo = tipo;
         }
 
-    public virtual int GetValorNumerico() => 0;
-    
+    public virtual int ObtenerValorNumerico() => 0;
 
-         public virtual void MostrarCarta()
-        => Console.WriteLine(ToString());
+     public virtual string NombreCorto => $"{Valor}{Color[0]}";
 
-        public override string ToString()
-        => $"{Valor} de {Color} ({Tipo})";
+    protected static bool SoportaUnicode()
+{
+    try
+    {
+        
+        return Console.OutputEncoding.Equals(System.Text.Encoding.UTF8);
+    }
+    catch
+    {
+        
+        return false;
+    }
+}
+
+
+    public override string ToString()
+    {
+        // Si la consola no soporta Unicode mostramos solo el texto
+        if (!SoportaUnicode())
+            return $"{Valor} de {Color} ({Tipo})";
+
+        
+        return $"{Valor} de {Color} ({Tipo})";
+    }
 }
