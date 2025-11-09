@@ -33,6 +33,11 @@ public abstract class JugadorBase : IJugador
         var cartas = string.Join(", ", _mano);
         ReportarAccion($"tiene en mano: {cartas}");
     }
+    protected virtual void ReiniciarMano()
+    {
+    _mano.Clear();
+    puntos = 0;
+    }
 
     public virtual void TomarDecision(IJuego juegoContexto)
     {
