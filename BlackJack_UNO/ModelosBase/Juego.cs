@@ -1,5 +1,5 @@
 namespace BlackJack_1.ModelosBase;
-//INCOMPLETO 
+
 using System;
 using System.Collections.Generic;
 using BlackJack_1.Interfaces;
@@ -26,7 +26,13 @@ public abstract class JuegoBase : IJuego
     }
 
     public virtual void IniciarJuego()
-        => RegistrarAccion($"Iniciando {NombreJuego} con {_jugadores.Count} jugadores.");
+    {
+        if (!ValidarJugadores())
+            throw new InvalidOperationException("No hay jugadores validos para iniciar el juego.");
+
+        RegistrarAccion($"Iniciando {NombreJuego} con {_jugadores.Count} jugadores...");
+        BarajarMazo();
+    }
 
     public virtual void RepartirCartas()
         => RegistrarAccion("Repartiendo cartas...");
@@ -50,7 +56,32 @@ public abstract class JuegoBase : IJuego
         => $"[{NombreJuego}] Jugadores: {_jugadores.Count}, Mazo: {_mazo.Count}, Descarte: {_descarte.Count}, Turno: {TurnoActual + 1}";
 
     public virtual void RegistrarAccion(string descripcion)
-        => OnAccionRegistrada?.Invoke(descripcion);
+    {
+        if (OnAccionRegistrada != null)
+            OnAccionRegistrada(descripcion);
+    }
+
+    protected virtual bool ValidarJugadores() => _jugadores.Count > 0;
+
+    protected virtual void BarajarMazo()
+    {
+        if (_mazo.Count == 0) return;
+        var rng = new Random();
+        for (int i = _mazo.Count - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (_mazo[i], _mazo[j]) = (_mazo[j], _mazo[i]);
+        }
+        RegistrarAccion("El mazo ha sido barajado.");
+    }
+
+    protected virtual void ReiniciarJuego()
+    {
+        _mazo.Clear();
+        _descarte.Clear();
+        TurnoActual = 0;
+        RegistrarAccion("El juego ha sido reiniciado.");
+    }
 
     private sealed class EstadoJuegoBasico : IEstadoJuego
     {
