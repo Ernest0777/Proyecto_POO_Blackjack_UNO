@@ -2,7 +2,7 @@ using System;
 using BlackJack_1.Interfaces;
 namespace BlackJack_1.ModelosBase;
 
-    public class Carta: ICarta
+    public abstract class Carta: ICarta
     {
  public string Color { get;protected init; }
         public string Valor { get; protected init; }
@@ -15,7 +15,7 @@ namespace BlackJack_1.ModelosBase;
             Tipo = tipo;
         }
 
-    public virtual int ObtenerValorNumerico() => 0;
+    public abstract int ObtenerValorNumerico();
 
      public virtual string NombreCorto => $"{Valor}{Color[0]}";
 
