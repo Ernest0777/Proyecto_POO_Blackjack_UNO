@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using System;
 namespace BlackJack_1.Interfaces;
 
 public interface IJugador

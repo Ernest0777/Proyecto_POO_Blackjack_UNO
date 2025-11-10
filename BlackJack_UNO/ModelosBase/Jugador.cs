@@ -14,24 +14,26 @@ public abstract class JugadorBase : IJugador
 
     public event Action<string>? OnAccionReportada;
 
+    //constructor
     protected JugadorBase(int id, string nombre, IEstrategiaJugador estrategia)
     {
         IdJugador = id;
         Nombre = nombre;
         Estrategia = estrategia;
     }
-
+    
+//metodos 
     public virtual void RecibirCarta(ICarta carta)
     {
         if (carta == null) throw new ArgumentNullException(nameof(carta));
         _mano.Add(carta);
-        ReportarAccion($"recibio {carta}");
+         NotificarAccion($"recibió {carta}");
     }
 
     public virtual void MostrarMano()
     {
         var cartas = string.Join(", ", _mano);
-        ReportarAccion($"tiene en mano: {cartas}");
+        NotificarAccion($"tiene en mano: {cartas}");
     }
     protected virtual void ReiniciarMano()
     {
@@ -50,14 +52,13 @@ public abstract class JugadorBase : IJugador
 
     public int GetId() => IdJugador;
 
-    protected void ReportarAccion(string mensaje)
-    {
-        DispararAccion($"[{Nombre}] {mensaje}");
-    }
-
-    private void DispararAccion(string mensaje)
+    public void NotificarAccion(string mensaje)
     {
         if (OnAccionReportada != null)
-            OnAccionReportada(mensaje);
+        {
+            string salida = $"[{Nombre}] {mensaje}";
+            OnAccionReportada(salida);
+        }
     }
+
 }
