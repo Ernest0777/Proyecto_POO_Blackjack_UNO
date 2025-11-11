@@ -144,7 +144,7 @@ public class EstrategiaCalculadora : IEstrategiaJugadorUno
 
         // Si no tiene ninguna de las anteriores juega una cualquiera valida.
         var cartaAleatoria = cartasJugables[new Random().Next(cartasJugables.Count)];
-        UltimaAccion = $"Juega {cartaAleatoria} porque no hay puede hacer mas";
+        UltimaAccion = $"Juega {cartaAleatoria} porque no hay mas";
         return cartaAleatoria;
     }
 }
