@@ -9,9 +9,7 @@
 
   <ItemGroup>
     <Folder Include="CreadorDeJugadores\" />
-    <Folder Include="Juegos\" />
     <Folder Include="Juegos\Blackjack\" />
-    <Folder Include="Juegos\Uno\" />
   </ItemGroup>
 
 </Project>
