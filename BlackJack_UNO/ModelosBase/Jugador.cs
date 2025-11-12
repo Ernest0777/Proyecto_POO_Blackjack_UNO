@@ -7,19 +7,20 @@ public abstract class JugadorBase : IJugador
 {
     public string Nombre { get; protected init; }
     public int IdJugador { get; protected init; }
+
+        // Lista interna con las cartas que posee el jugador
     protected readonly List<ICarta> _mano = new();
     public IReadOnlyList<ICarta> Mano => _mano.AsReadOnly();
+    
     protected int puntos;
-    public IEstrategiaJugador Estrategia { get; set; }
 
     public event Action<string>? OnAccionReportada;
 
-    //constructor
-    protected JugadorBase(int id, string nombre, IEstrategiaJugador estrategia)
+     // Constructor 
+    protected JugadorBase(int id, string nombre)
     {
         IdJugador = id;
         Nombre = nombre;
-        Estrategia = estrategia;
     }
     
 //metodos 
@@ -41,17 +42,13 @@ public abstract class JugadorBase : IJugador
     puntos = 0;
     }
 
-    public virtual void TomarDecision(IJuego juegoContexto)
-    {
-        Estrategia?.EjecutarDecision(this, juegoContexto);
-    }
+    // Metodo abstracto para decidir una accion durante su turno 
+    public abstract void TomarDecision(IJuego juegoContexto);
 
+    // Metodo abstracto que devuelve los puntos del jugador
     public abstract int ObtenerPuntos();
 
-    public string GetNombre() => Nombre;
-
-    public int GetId() => IdJugador;
-
+    // Envía un mensaje de accion al evento OnAccionReportada
     public void NotificarAccion(string mensaje)
     {
         if (OnAccionReportada != null)
@@ -60,5 +57,4 @@ public abstract class JugadorBase : IJugador
             OnAccionReportada(salida);
         }
     }
-
 }
