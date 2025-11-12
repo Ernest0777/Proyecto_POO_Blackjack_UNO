@@ -1,8 +1,11 @@
-using System;
-
-namespace BlackJack_1.Interfaces;
-
-public class IEfectoCarta
+namespace BlackJack_1.Juegos.Uno.EfectosCartas
 {
 
+    public interface IEfectoCarta
+    {
+    
+        void AplicarEfecto(dynamic juego, dynamic jugadorActual);
+    }
 }
+
+
