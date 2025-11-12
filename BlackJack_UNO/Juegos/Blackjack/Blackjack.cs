@@ -1,139 +1,109 @@
+namespace BlackJack_1.Juegos.Blackjack;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using BlackJack_1.Interfaces;
+using BlackJack_1.ModelosBase;
 
-namespace BlackJack_1.Juegos.Blackjack
+public class Blackjack : JuegoBase, IJuego
 {
-    public class Blackjack : IJuego
+    private readonly List<IJugador> jugadores;
+    public Dealer Dealer { get; }
+    public MazoBlackjack Mazo { get; }
+
+    public bool JuegoFinalizado { get; private set; }
+
+    public Blackjack(IEnumerable<IJugador> jugadoresParticipantes)
+        : base("Blackjack")
     {
-        private readonly List<IJugador> _jugadores;
-        public IReadOnlyList<IJugador> Jugadores => _jugadores.AsReadOnly();
+        jugadores = jugadoresParticipantes?.ToList() ?? new List<IJugador>();
+        Mazo = new MazoBlackjack();
+        Dealer = new Dealer(0, "Dealer");
+    }
 
-        public MazoBlackjack Mazo { get; }
-        public Dealer Dealer { get; }
-        public bool JuegoFinalizado { get; private set; }
-
-        public IEstadoJuego EstadoActual { get; private set; }
-
-        public event Action<string>? OnAccionRegistrada;
-
-        public Blackjack(IEnumerable<IJugador> jugadores)
+    // Inicia el juego y ejecuta el flujo principal
+    public override void IniciarJuego()
+    {
+        if (jugadores.Count == 0)
         {
-            _jugadores = jugadores?.ToList() ?? new List<IJugador>();
-            Mazo = new MazoBlackjack();
-            Dealer = new Dealer(0, "Dealer");
-
-            EstadoActual = new EstadoJuegoBlackjack("Inicializado", _jugadores, Mazo);
+            RegistrarAccion("No hay jugadores para iniciar el juego.");
+            return;
         }
 
-        public void IniciarJuego()
+        RegistrarAccion("Juego de Blackjack iniciado.");
+        RepartirCartas();
+        MostrarEstado();
+        JugarTurno();
+        DeterminarGanador();
+        FinalizarJuego();
+    }
+
+    // Reparte dos cartas a cada jugador y al dealer
+    public override void RepartirCartas()
+    {
+        foreach (var jugador in jugadores)
         {
-            RegistrarAccion("Juego de Blackjack iniciado.");
-            RepartirCartas();
-            MostrarEstado();
-            JugarTurno();
-            DeterminarGanador();
-            FinalizarJuego();
+            jugador.RecibirCarta(Mazo.SacarCarta());
+            jugador.RecibirCarta(Mazo.SacarCarta());
         }
 
-        public void RepartirCartas()
+        Dealer.RecibirCarta(Mazo.SacarCarta());
+        Dealer.RecibirCarta(Mazo.SacarCarta());
+
+        RegistrarAccion("Se repartieron las cartas iniciales.");
+    }
+
+    // Cada jugador juega su turno luego el dealer actua
+    public override void JugarTurno()
+    {
+        foreach (var jugador in jugadores)
         {
-            foreach (var jugador in _jugadores)
-            {
-                jugador.RecibirCarta(Mazo.RobarCarta());
-                jugador.RecibirCarta(Mazo.RobarCarta());
-            }
-
-            Dealer.RecibirCarta(Mazo.RobarCarta());
-            Dealer.RecibirCarta(Mazo.RobarCarta());
-
-            RegistrarAccion("Se repartieron las cartas iniciales.");
+            jugador.TomarDecision(this);
+            RegistrarAccion($"{jugador.Nombre} termina su turno con {jugador.ObtenerPuntos()} puntos.");
         }
 
-        public void JugarTurno()
+        Dealer.TomarDecision(this);
+        RegistrarAccion($"Dealer termina su turno con {Dealer.ObtenerPuntos()} puntos.");
+    }
+
+    public override void AvanzarTurno()
+        => RegistrarAccion("Avanzando turno...");
+
+    // Determina el resultado final del juego
+    public override void DeterminarGanador()
+    {
+        RegistrarAccion("Determinando ganador(es).");
+
+        int puntosDealer = Dealer.ObtenerPuntos();
+
+        foreach (var jugador in jugadores)
         {
-            foreach (var jugador in _jugadores)
-            {
-                jugador.TomarDecision(this);
-                RegistrarAccion($"{jugador.Nombre} termina su turno con {jugador.ObtenerPuntos()} puntos.");
-            }
-
-            Dealer.TomarDecision(this);
-            RegistrarAccion($"Dealer termina su turno con {Dealer.ObtenerPuntos()} puntos.");
-        }
-
-        public void AvanzarTurno() => RegistrarAccion("Avanzando turno.");
-
-        public void DeterminarGanador()
-        {
-            RegistrarAccion("Determinando ganador(es).");
-
-            int puntosDealer = Dealer.ObtenerPuntos();
-
-            foreach (var jugador in _jugadores)
-            {
-                int puntosJugador = jugador.ObtenerPuntos();
-                string resultado = ReglasBlackjack.DeterminarResultado(puntosJugador, puntosDealer);
-
-                RegistrarAccion($"{jugador.Nombre}: {resultado} ({puntosJugador} vs {puntosDealer})");
-                Console.WriteLine($"{jugador.Nombre}: {resultado} ({puntosJugador} vs {puntosDealer})");
-            }
-        }
-
-        public void FinalizarJuego()
-        {
-            JuegoFinalizado = true;
-            RegistrarAccion("El juego ha finalizado.");
-        }
-
-        public string ObtenerEstado() => EstadoActual.ObtenerResumen();
-
-        public void RegistrarAccion(string descripcion)
-        {
-            OnAccionRegistrada?.Invoke(descripcion);
-            EstadoActual = new EstadoJuegoBlackjack(descripcion, _jugadores, Mazo);
-        }
-
-        private void MostrarEstado()
-        {
-            Console.WriteLine("\n--- Estado del Juego ---");
-            foreach (var jugador in _jugadores)
-                Console.WriteLine($"{jugador.Nombre}: {jugador.ObtenerPuntos()} puntos");
-            Console.WriteLine($"Dealer: {Dealer.ObtenerPuntos()} puntos\n");
-        }
-
-        private class EstadoJuegoBlackjack : IEstadoJuego
-        {
-            public string NombreJuego { get; }
-            public IReadOnlyList<IJugador> Jugadores { get; }
-            public IReadOnlyList<ICarta> Mazo { get; }
-            public IReadOnlyList<ICarta> Descarte { get; } = Array.Empty<ICarta>();
-            public int TurnoActual { get; }
-            private readonly string _descripcion;
-
-            public EstadoJuegoBlackjack(string descripcion, IReadOnlyList<IJugador> jugadores, MazoBlackjack mazo)
-            {
-                _descripcion = descripcion;
-                NombreJuego = "Blackjack";
-                Jugadores = jugadores;
-                Mazo = mazo.ObtenerCartasRestantes();
-                TurnoActual = 0;
-            }
-
-            public string ObtenerResumen()
-            {
-                return $"[{NombreJuego}] {_descripcion} | Jugadores: {Jugadores.Count}, Cartas restantes: {Mazo.Count}";
-            }
-
-            public override string ToString() => ObtenerResumen();
+            int puntosJugador = jugador.ObtenerPuntos();
+            string resultado = ReglasBlackjack.DeterminarResultado(puntosJugador, puntosDealer);
+            RegistrarAccion($"{jugador.Nombre}: {resultado} ({puntosJugador} vs {puntosDealer})");
         }
     }
+
+    public override void FinalizarJuego()
+    {
+        JuegoFinalizado = true;
+        RegistrarAccion("El juego ha finalizado.");
+    }
+
+    // Muestra el estado actual en consola 
+    private void MostrarEstado()
+    {
+        Console.WriteLine("\n--- Estado del Juego ---");
+        foreach (var jugador in jugadores)
+            Console.WriteLine($"{jugador.Nombre}: {jugador.ObtenerPuntos()} puntos");
+        Console.WriteLine($"Dealer: {Dealer.ObtenerPuntos()} puntos\n");
+    }
+
+   
+    public override void RegistrarAccion(string descripcion)
+    {
+        if (OnAccionRegistrada != null)
+            OnAccionRegistrada($"[Blackjack] {descripcion}");
+    }
 }
-
-
-
-
-
-
-
