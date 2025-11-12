@@ -1,45 +1,48 @@
-using System;
-using BlackJack_1.ModelosBase;
-
 namespace BlackJack_1.Juegos.Uno;
 
-public class MazoUno: Mazo<CartaUno>
+using System;
+using BlackJack_1.ModelosBase;
+using BlackJack_1.Interfaces;
+
+public class MazoUno : Mazo<CartaUno>, IMazo
 {
- public MazoUno()
+    public MazoUno()
     {
         GenerarCartas();
         Barajar();
     }
 
+    // Genera todas las cartas de UNO 
     private void GenerarCartas()
     {
-        // Cartas normales del 0 al 9 Dos copias excepto 0
-        foreach (var color in Enum.GetValues<ColorCartaUno>())
-        {
-            if (color == ColorCartaUno.Negro)
-                continue; // Los comodines no tienen color
+        // Colores principales (no incluye los comodines negros)
+        string[] colores = { "Rojo", "Azul", "Verde", "Amarillo" };
 
-            for (int numeroActual = 0; numeroActual <= 9; numeroActual++)
+        foreach (var color in colores)
+        {
+            // Cartas numericas dos copias del 1 al 9 una sola del 0
+            for (int numero = 0; numero <= 9; numero++)
             {
-                AgregarCarta(new CartaUno(color, TipoCartaUno.Normal, numeroActual));
-                if (numeroActual != 0)
-                    AgregarCarta(new CartaUno(color, TipoCartaUno.Normal, numeroActual));
+                var cartaNormal = new CartaUno(color, numero.ToString(), TipoCartaUno.Normal);
+                AgregarCarta(cartaNormal);
+
+                if (numero != 0)
+                    AgregarCarta(new CartaUno(color, numero.ToString(), TipoCartaUno.Normal));
             }
 
-            // Cartas especiales por color 
-            for (int cantidad = 0; cantidad < 2; cantidad++)
+            // Cartas especiales (+2, Bloqueo, Reversa) dos por color
+            for (int i = 0; i < 2; i++)
             {
-                AgregarCarta(new CartaUno(color, TipoCartaUno.MasDos));
-                AgregarCarta(new CartaUno(color, TipoCartaUno.Bloqueo));
-                AgregarCarta(new CartaUno(color, TipoCartaUno.Reversa));
+                AgregarCarta(new CartaUno(color, "+2", TipoCartaUno.MasDos));
+                AgregarCarta(new CartaUno(color, "Bloqueo", TipoCartaUno.Bloqueo));
+                AgregarCarta(new CartaUno(color, "Reversa", TipoCartaUno.Reversa));
             }
         }
-
-        //  Comodines 
-        for (int cantidad = 0; cantidad < 4; cantidad++)
+            // Comodines negros +4 y Cambio de color 4 de cada uno
+        for (int i = 0; i < 4; i++)
         {
-            AgregarCarta(new CartaUno(ColorCartaUno.Negro, TipoCartaUno.MasCuatro));
-            AgregarCarta(new CartaUno(ColorCartaUno.Negro, TipoCartaUno.CambioColor));
+            AgregarCarta(new CartaUno("Negro", "+4", TipoCartaUno.MasCuatro));
+            AgregarCarta(new CartaUno("Negro", "Cambio Color", TipoCartaUno.CambioColor));
         }
     }
 }

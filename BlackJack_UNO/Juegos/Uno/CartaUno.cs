@@ -1,44 +1,48 @@
-using System;
-using BlackJack_1.ModelosBase;
-using BlackJack_1.Interfaces;
 namespace BlackJack_1.Juegos.Uno;
 
-public enum ColorCartaUno
+using BlackJack_1.ModelosBase;
+using BlackJack_1.Interfaces;
+
+
+public class CartaUno : Carta
 {
-Rojo,
-    Azul,
-    Verde,
-    Amarillo,
-    Negro  // usado para comodines
+    public TipoCartaUno Tipo { get; }
+
+    // Constructor: define el color  valor y tipo
+    public CartaUno(string color, string valor, TipoCartaUno tipo)
+        : base(color, valor, tipo.ToString())
+    {
+        Tipo = tipo;
+    }
+
+    // Retorna el valor numérico de la carta solo para fines de comparación 
+    public override int ObtenerValorNumerico()
+    {
+        return Tipo switch
+        {
+            TipoCartaUno.Normal => int.TryParse(Valor, out int n) ? n : 0,
+            TipoCartaUno.MasDos => 20,
+            TipoCartaUno.MasCuatro => 50,
+            TipoCartaUno.Bloqueo => 20,
+            TipoCartaUno.Reversa => 20,
+            TipoCartaUno.CambioColor => 50,
+            _ => 0
+        };
+    }
+
+    public override string ToString()
+    {
+        return $"{Valor} ({Color})";
+    }
 }
+
+// Enumeración con todos los tipos de cartas UNO
 public enum TipoCartaUno
 {
     Normal,
     MasDos,
     MasCuatro,
-    Reversa,
     Bloqueo,
+    Reversa,
     CambioColor
-}
-
-
-
-public class CartaUno : Carta
-{
-    public ColorCartaUno Color { get; }
-    public TipoCartaUno Tipo { get; }
-    public int? Numero { get; } 
-    public CartaUno(ColorCartaUno color, TipoCartaUno tipo, int? numero = null)
-    {
-        Color = color;
-        Tipo = tipo;
-        Numero = numero;
-    }
-
-    public override string ToString()
-    {
-        return Tipo == TipoCartaUno.Normal
-            ? $"{Numero} {Color}"
-            : $"{Tipo} {Color}";
-    }
 }
