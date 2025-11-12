@@ -1,15 +1,18 @@
-namespace BlackJack_1.Juegos.Blackjack
-{
+namespace BlackJack_1.Juegos.Blackjack;
+
     public static class ReglasBlackjack
-    {
+{
+        private const int ValorMaximo = 21;
+    // Verifica si el jugador tiene 21 con dos cartas
+
         public static bool EsBlackjack(int puntos, int cantidadCartas)
         {
-            return puntos == 21 && cantidadCartas == 2;
+            return puntos == ValorMaximo && cantidadCartas == 2;
         }
 
         public static bool SePaso(int puntos)
         {
-            return puntos > 21;
+            return puntos > ValorMaximo;
         }
 
         public static string DeterminarResultado(int puntosJugador, int puntosDealer)
@@ -25,6 +28,6 @@ namespace BlackJack_1.Juegos.Blackjack
             return "Pierde";
         }
     }
-}
+
 
 
