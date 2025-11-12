@@ -1,9 +1,4 @@
 using System;
-
-namespace BlackJack_1.Juegos.Uno.EfectosCartas;
-using System;
-
-public class EfectoMasDos
 namespace BlackJack_1.Juegos.Uno.EfectosCartas
 {
 

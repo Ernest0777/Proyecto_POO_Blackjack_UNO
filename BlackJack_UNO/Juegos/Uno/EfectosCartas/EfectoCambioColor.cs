@@ -1,8 +1,4 @@
 using System;
-
-namespace BlackJack_1.Juegos.Uno.EfectosCartas;
-
-public class EfectoCambioColor
 namespace BlackJack_1.Juegos.Uno.EfectosCartas
 {
 
