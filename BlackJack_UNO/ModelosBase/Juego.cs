@@ -1,5 +1,4 @@
 namespace BlackJack_1.ModelosBase;
-
 using System;
 using System.Collections.Generic;
 using BlackJack_1.Interfaces;
@@ -61,17 +60,25 @@ public abstract class JuegoBase : IJuego
             OnAccionRegistrada(descripcion);
     }
 
-    protected virtual bool ValidarJugadores() => _jugadores.Count > 0;
+     protected virtual bool ValidarJugadores()
+    {
+        if (NombreJuego.Equals("UNO", StringComparison.OrdinalIgnoreCase))
+            return _jugadores.Count >= 2;
 
-    protected virtual void BarajarMazo()
+        if (NombreJuego.Equals("Blackjack", StringComparison.OrdinalIgnoreCase))
+            return _jugadores.Count >= 1;
+
+        // al menos un jugador
+        return _jugadores.Count > 0;
+    }
+
+
+ protected virtual void BarajarMazo()
     {
         if (_mazo.Count == 0) return;
-        var rng = new Random();
-        for (int i = _mazo.Count - 1; i > 0; i--)
-        {
-            int j = rng.Next(i + 1);
-            (_mazo[i], _mazo[j]) = (_mazo[j], _mazo[i]);
-        }
+
+        Randomizador.ObtenerInstancia().Barajar(_mazo);
+
         RegistrarAccion("El mazo ha sido barajado.");
     }
 
