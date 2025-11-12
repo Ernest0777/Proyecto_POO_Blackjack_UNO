@@ -23,7 +23,7 @@ public class EstrategiaCautelosa : IEstrategiaJugadorBlackjack
     {
         if (juego is not Blackjack blackjack)
         {
-            UltimaAccion = "Error: contexto no valido.";
+            UltimaAccion = "Error: contexto no válido.";
             return;
         }
 
@@ -33,11 +33,16 @@ public class EstrategiaCautelosa : IEstrategiaJugadorBlackjack
         {
             var carta = blackjack.MazoBlackjack.SacarCarta();
             jugador.RecibirCarta(carta);
-            UltimaAccion = $"Pidio carta ({carta}) → Total: {jugador.ObtenerPuntos()}";
+            int puntos = jugador.ObtenerPuntos();
+
+            if (puntos > 21)
+                UltimaAccion = $"Pidió carta ({carta}) → Total: {puntos} ❌ SE PASÓ";
+            else
+                UltimaAccion = $"Pidió carta ({carta}) → Total: {puntos}";
         }
         else
         {
-            UltimaAccion = $"Se planto con {jugador.ObtenerPuntos()} puntos.";
+            UltimaAccion = $"Se plantó con {jugador.ObtenerPuntos()} puntos.";
         }
 
         jugador.NotificarAccion(UltimaAccion);

@@ -9,14 +9,13 @@ namespace BlackJack_1.Juegos.Blackjack;
 
 public class Blackjack : JuegoBase, IJuego
 {
-    private readonly List<IJugadorBlackjack> jugadores; 
+    private readonly List<IJugadorBlackjack> jugadores;
 
     public Dealer Dealer { get; }
     public MazoBlackjack MazoBlackjack { get; }
 
     public bool JuegoFinalizado { get; private set; }
 
-    
     public Blackjack(IEnumerable<IJugadorBlackjack> jugadoresParticipantes)
         : base("Blackjack")
     {
@@ -25,7 +24,7 @@ public class Blackjack : JuegoBase, IJuego
         Dealer = new Dealer(0, Constantes.NombreDealer);
     }
 
-    // Inicia el juego 
+    // Inicia el juego
     public override void IniciarJuego()
     {
         if (jugadores.Count == 0)
@@ -42,17 +41,25 @@ public class Blackjack : JuegoBase, IJuego
         FinalizarJuego();
     }
 
-    // Reparte las cartas iniciales
+    // Reparte las cartas iniciales y muestra qué recibió cada uno
     public override void RepartirCartas()
     {
         foreach (var jugador in jugadores)
         {
             for (int i = 0; i < Constantes.CartasInicialesBlackjack; i++)
-                jugador.RecibirCarta(MazoBlackjack.SacarCarta());
+            {
+                var carta = MazoBlackjack.SacarCarta();
+                jugador.RecibirCarta(carta);
+                RegistrarAccion($"{jugador.Nombre} recibió {carta}");
+            }
         }
 
         for (int i = 0; i < Constantes.CartasInicialesBlackjack; i++)
-            Dealer.RecibirCarta(MazoBlackjack.SacarCarta());
+        {
+            var carta = MazoBlackjack.SacarCarta();
+            Dealer.RecibirCarta(carta);
+            RegistrarAccion($"Dealer recibió {carta}");
+        }
 
         RegistrarAccion("Se repartieron las cartas iniciales.");
     }
@@ -62,11 +69,23 @@ public class Blackjack : JuegoBase, IJuego
     {
         foreach (var jugador in jugadores)
         {
+            RegistrarAccion($"Turno de {jugador.Nombre}: comienza con {jugador.ObtenerPuntos()} puntos.");
+
             jugador.TomarDecision(this);
+
+            // Verificar si se pasó de 21
+            if (jugador.ObtenerPuntos() > 21)
+                RegistrarAccion($"{jugador.Nombre} se pasó con {jugador.ObtenerPuntos()} puntos y queda eliminado.");
+
             RegistrarAccion($"{jugador.Nombre} termina su turno con {jugador.ObtenerPuntos()} puntos.");
         }
 
+        RegistrarAccion("Turno del Dealer.");
         Dealer.TomarDecision(this);
+
+        if (Dealer.ObtenerPuntos() > 21)
+            RegistrarAccion($"Dealer se pasó con {Dealer.ObtenerPuntos()} puntos.");
+
         RegistrarAccion($"Dealer termina su turno con {Dealer.ObtenerPuntos()} puntos.");
     }
 

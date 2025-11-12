@@ -14,7 +14,7 @@ public class EstrategiaTemeraria : IEstrategiaJugadorBlackjack
         return jugador.ObtenerPuntos() < 19 ? "Pedir" : "Plantarse";
     }
 
-    // Ejecuta la accion elegida
+    // Ejecuta la acción elegida
     public void EjecutarDecision(JugadorBlackjack jugador, IJuego juego)
     {
         if (juego is not Blackjack blackjack)
@@ -29,7 +29,12 @@ public class EstrategiaTemeraria : IEstrategiaJugadorBlackjack
         {
             var carta = blackjack.MazoBlackjack.SacarCarta();
             jugador.RecibirCarta(carta);
-            UltimaAccion = $"Pidió carta ({carta}) → Total: {jugador.ObtenerPuntos()}";
+            int puntos = jugador.ObtenerPuntos();
+
+            if (puntos > 21)
+                UltimaAccion = $"Pidió carta ({carta}) → Total: {puntos} ❌ SE PASÓ";
+            else
+                UltimaAccion = $"Pidió carta ({carta}) → Total: {puntos}";
         }
         else
         {
@@ -39,3 +44,4 @@ public class EstrategiaTemeraria : IEstrategiaJugadorBlackjack
         jugador.NotificarAccion(UltimaAccion);
     }
 }
+
