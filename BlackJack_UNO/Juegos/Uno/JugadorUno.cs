@@ -1,34 +1,67 @@
 namespace BlackJack_1.Juegos.Uno;
 
+using System.Linq;
 using BlackJack_1.ModelosBase;
 using BlackJack_1.Interfaces;
-using BlackJack_1.Utilidades;
 
-public class JugadorUno : Jugador
+// Representa a un jugador del juego UNO
+public class JugadorUno : JugadorBase, IJugadorUno
 {
-    public JugadorUno(string nombreJugador, IEstrategiaJugador estrategia)
-        : base(nombreJugador, estrategia)
+    // Estrategia especifica de UNO (aleatoria, calculadora, etc.)
+    public IEstrategiaJugadorUno Estrategia { get; set; }
+
+    // Constructor: define id, nombre y la estrategia usada por el jugador
+    public JugadorUno(int id, string nombre, IEstrategiaJugadorUno estrategia)
+        : base(id, nombre)
     {
+        Estrategia = estrategia;
     }
 
-    
-    // Ejecuta el turno del jugador segun la estrategia
-    
-    public override void TomarTurno()
+    // Calcula puntos de las cartas en mano (para el final del juego o desempate)
+    public override int ObtenerPuntos()
     {
-        var cartaElegida = Estrategia.DecidirCarta(this);
+        return _mano.Sum(c => c.ObtenerValorNumerico());
+    }
 
-        if (cartaElegida != null)
+    // Decide que acción tomar según su estrategia
+    public override void TomarDecision(IJuego juegoContexto)
+    {
+        if (Estrategia == null)
         {
-            Mano.Remove(cartaElegida);
-            ConsolaLogger.Mostrar($"{Nombre} juega {cartaElegida}");
-
-            if (Mano.Count == 1)
-                ConsolaLogger.Mostrar($"{Nombre} grita: ¡UNO!");
+            NotificarAccion("no tiene estrategia asignada y pasa su turno.");
+            return;
         }
+
+        // En UNO la estrategia decide qué carta jugar
+        if (juegoContexto is not Uno juegoUno)
+        {
+            NotificarAccion("el contexto de juego no es válido.");
+            return;
+        }
+
+        var cartaSuperior = juegoUno.ObtenerCartaSuperior();
+        var cartaSeleccionada = Estrategia.DecidirCarta(this, cartaSuperior);
+
+        if (cartaSeleccionada != null)
+            NotificarAccion($"ha decidido jugar {cartaSeleccionada}");
         else
-        {
-            ConsolaLogger.Mostrar($"{Nombre} no puede jugar, toma una carta del mazo.");
-        }
+            NotificarAccion("no puede jugar y tomara una carta.");
+    }
+
+    // Metodos auxiliares para manipular la mano
+    public void AgregarCarta(CartaUno carta)
+    {
+        _mano.Add(carta);
+    }
+
+    public void QuitarCarta(CartaUno carta)
+    {
+        _mano.Remove(carta);
+    }
+
+    // Devuelve la lista de cartas en mano
+    public IEnumerable<CartaUno> ObtenerMano()
+    {
+        return _mano.OfType<CartaUno>().ToList();
     }
 }
