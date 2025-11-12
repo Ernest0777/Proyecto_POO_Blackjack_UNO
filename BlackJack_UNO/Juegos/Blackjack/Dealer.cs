@@ -1,5 +1,7 @@
 using BlackJack_1.Interfaces;
 using BlackJack_1.ModelosBase;
+using BlackJack_1.Utilidades;
+
 namespace BlackJack_1.Juegos.Blackjack
 {
     public class Dealer : JugadorBlackjack
@@ -17,7 +19,7 @@ namespace BlackJack_1.Juegos.Blackjack
             // El dealer pide carta hasta tener 17 o más puntos
             if (juegoContexto is not Blackjack blackjack) return;
 
-            while (ObtenerPuntos() < 17)
+            while (ObtenerPuntos() < Constantes.PuntosDealerPlantarse)
             {
                 var carta = blackjack.Mazo.SacarCarta();
             RecibirCarta(carta);

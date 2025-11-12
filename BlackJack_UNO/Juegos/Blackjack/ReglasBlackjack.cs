@@ -1,18 +1,18 @@
 namespace BlackJack_1.Juegos.Blackjack;
+using BlackJack_1.Utilidades;
 
     public static class ReglasBlackjack
 {
-        private const int ValorMaximo = 21;
     // Verifica si el jugador tiene 21 con dos cartas
 
         public static bool EsBlackjack(int puntos, int cantidadCartas)
         {
-            return puntos == ValorMaximo && cantidadCartas == 2;
+            return puntos == Constantes.ValorMaximoBlackjack && cantidadCartas == Constantes.CartasInicialesBlackjack;
         }
 
         public static bool SePaso(int puntos)
         {
-            return puntos > ValorMaximo;
+            return puntos > Constantes.ValorMaximoBlackjack;
         }
 
         public static string DeterminarResultado(int puntosJugador, int puntosDealer)

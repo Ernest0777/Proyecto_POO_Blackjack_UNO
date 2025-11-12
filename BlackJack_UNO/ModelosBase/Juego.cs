@@ -63,7 +63,7 @@ public abstract class JuegoBase : IJuego
      protected virtual bool ValidarJugadores()
     {
         if (NombreJuego.Equals("UNO", StringComparison.OrdinalIgnoreCase))
-            return _jugadores.Count >= 2;
+            return _jugadores.Count >= Constantes.NumeroJugadoresMinimoUno;
 
         if (NombreJuego.Equals("Blackjack", StringComparison.OrdinalIgnoreCase))
             return _jugadores.Count >= 1;

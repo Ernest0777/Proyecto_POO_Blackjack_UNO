@@ -1,10 +1,11 @@
-namespace BlackJack_1.Juegos.Blackjack;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using BlackJack_1.Interfaces;
 using BlackJack_1.ModelosBase;
+using BlackJack_1.Utilidades;
+
+namespace BlackJack_1.Juegos.Blackjack;
 
 public class Blackjack : JuegoBase, IJuego
 {
@@ -19,10 +20,10 @@ public class Blackjack : JuegoBase, IJuego
     {
         jugadores = jugadoresParticipantes?.ToList() ?? new List<IJugador>();
         Mazo = new MazoBlackjack();
-        Dealer = new Dealer(0, "Dealer");
+        Dealer = new Dealer(0, Constantes.NombreDealer);
     }
 
-    // Inicia el juego y ejecuta el flujo principal
+    // Inicia el juego 
     public override void IniciarJuego()
     {
         if (jugadores.Count == 0)
@@ -39,22 +40,22 @@ public class Blackjack : JuegoBase, IJuego
         FinalizarJuego();
     }
 
-    // Reparte dos cartas a cada jugador y al dealer
+    // Reparte las cartas iniciales
     public override void RepartirCartas()
     {
         foreach (var jugador in jugadores)
         {
-            jugador.RecibirCarta(Mazo.SacarCarta());
-            jugador.RecibirCarta(Mazo.SacarCarta());
+            for (int i = 0; i < Constantes.CartasInicialesBlackjack; i++)
+                jugador.RecibirCarta(Mazo.SacarCarta());
         }
 
-        Dealer.RecibirCarta(Mazo.SacarCarta());
-        Dealer.RecibirCarta(Mazo.SacarCarta());
+        for (int i = 0; i < Constantes.CartasInicialesBlackjack; i++)
+            Dealer.RecibirCarta(Mazo.SacarCarta());
 
         RegistrarAccion("Se repartieron las cartas iniciales.");
     }
 
-    // Cada jugador juega su turno luego el dealer actua
+    // Cada jugador juega su turno, luego el dealer actúa
     public override void JugarTurno()
     {
         foreach (var jugador in jugadores)
@@ -68,7 +69,7 @@ public class Blackjack : JuegoBase, IJuego
     }
 
     public override void AvanzarTurno()
-        => RegistrarAccion("Avanzando turno...");
+        => RegistrarAccion("Avanzando turno.");
 
     // Determina el resultado final del juego
     public override void DeterminarGanador()
@@ -94,13 +95,12 @@ public class Blackjack : JuegoBase, IJuego
     // Muestra el estado actual en consola 
     private void MostrarEstado()
     {
-        Console.WriteLine("\n--- Estado del Juego ---");
+        Console.WriteLine("\n Estado del Juego");
         foreach (var jugador in jugadores)
             Console.WriteLine($"{jugador.Nombre}: {jugador.ObtenerPuntos()} puntos");
         Console.WriteLine($"Dealer: {Dealer.ObtenerPuntos()} puntos\n");
     }
 
-   
     public override void RegistrarAccion(string descripcion)
     {
         if (OnAccionRegistrada != null)
