@@ -16,4 +16,6 @@ public interface IMazo<TipoCarta> where TipoCarta : ICarta
 
     // Devuelve una lista con las cartas actuales solo para pruebas 
     IEnumerable<TipoCarta> MostrarCartas();
+    void ReinsertarCarta(TipoCarta cartaAReinsertar);
 }
+
