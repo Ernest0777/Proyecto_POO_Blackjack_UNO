@@ -11,30 +11,49 @@ public abstract class Mazo<TipoCarta> : IMazo<TipoCarta> where TipoCarta : ICart
     protected List<TipoCarta> CartasOriginales { get; } = new();
     protected Stack<TipoCarta> PilaDeCartas { get; private set; } = new();
 
-    // Agregar cartas al mazo
-    protected void AgregarCarta(TipoCarta cartaNueva)
-        => CartasOriginales.Add(cartaNueva);
+    // referencia  al descarte
+    public Stack<TipoCarta>? PilaDeDescarte { get; set; }
 
-    // Baraja las cartas y las guarda en la pila
+    protected void AgregarCarta(TipoCarta cartaNueva)
+    {
+        CartasOriginales.Add(cartaNueva);
+    }
+
     public virtual void Barajar()
     {
         var cartasMezcladas = Randomizador.BarajarLista(CartasOriginales);
         PilaDeCartas = new Stack<TipoCarta>(cartasMezcladas);
     }
 
-    // Saca la carta que está hasta arriba
     public virtual TipoCarta SacarCarta()
     {
+        //  Si el mazo esta vacio intenta regenerarlo desde el descarte
         if (PilaDeCartas.Count == 0)
-            throw new InvalidOperationException("El mazo está vacío, no se pueden sacar más cartas.");
+        {
+            if (PilaDeDescarte == null || PilaDeDescarte.Count <= 1)
+                throw new InvalidOperationException("El mazo y el descarte están vacíos. No se pueden sacar mas cartas.");
+
+            // Conservamos la carta superior (la última jugada)
+            var cartaSuperior = PilaDeDescarte.Pop();
+
+            // Rebarajamos el resto del descarte
+            var cartasRebarajadas = Randomizador.BarajarLista(PilaDeDescarte.ToList());
+            PilaDeCartas = new Stack<TipoCarta>(cartasRebarajadas);
+
+            // Reiniciamos el descarte con solo la carta superior
+            PilaDeDescarte.Clear();
+            PilaDeDescarte.Push(cartaSuperior);
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(" El mazo estaba vacio y se rebarajo usando el descarte.");
+            Console.ResetColor();
+        }
 
         return PilaDeCartas.Pop();
     }
 
-    // Devuelve la cantidad de cartas restantes en el mazo
     public int CartasRestantes() => PilaDeCartas.Count;
 
-    // Reinsertar una carta al fondo del mazo
     public void ReinsertarCarta(TipoCarta cartaAReinsertar)
     {
         var listaTemporal = PilaDeCartas.Reverse().ToList();
@@ -42,6 +61,5 @@ public abstract class Mazo<TipoCarta> : IMazo<TipoCarta> where TipoCarta : ICart
         PilaDeCartas = new Stack<TipoCarta>(listaTemporal);
     }
 
-    // Devuelve una lista con las cartas actuales del mazo
     public IEnumerable<TipoCarta> MostrarCartas() => PilaDeCartas.ToList();
 }
