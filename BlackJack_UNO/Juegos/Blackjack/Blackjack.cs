@@ -9,16 +9,18 @@ namespace BlackJack_1.Juegos.Blackjack;
 
 public class Blackjack : JuegoBase, IJuego
 {
-    private readonly List<IJugador> jugadores;
+    private readonly List<IJugadorBlackjack> jugadores; 
+
     public Dealer Dealer { get; }
     public MazoBlackjack MazoBlackjack { get; }
 
     public bool JuegoFinalizado { get; private set; }
 
-    public Blackjack(IEnumerable<IJugador> jugadoresParticipantes)
+    
+    public Blackjack(IEnumerable<IJugadorBlackjack> jugadoresParticipantes)
         : base("Blackjack")
     {
-        jugadores = jugadoresParticipantes?.ToList() ?? new List<IJugador>();
+        jugadores = jugadoresParticipantes?.ToList() ?? new List<IJugadorBlackjack>();
         MazoBlackjack = new MazoBlackjack();
         Dealer = new Dealer(0, Constantes.NombreDealer);
     }
@@ -103,7 +105,6 @@ public class Blackjack : JuegoBase, IJuego
 
     public override void RegistrarAccion(string descripcion)
     {
-            base.RegistrarAccion($"[Blackjack] {descripcion}");
-
+        base.RegistrarAccion($"[Blackjack] {descripcion}");
     }
 }
