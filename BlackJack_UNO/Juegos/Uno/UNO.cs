@@ -39,10 +39,12 @@ public class Uno : JuegoBase
     }
 
     // Inicia la simulación del juego UNO
-    public override void IniciarJuego()
-    {
-        ConsolaLogger.Mostrar("Comienza el juego de UNO, mucha suerte jugadores, que gane el mejor");
+public override void IniciarJuego()
+{
+    ConsolaLogger.Mostrar("Comienza el juego de UNO, mucha suerte jugadores, que gane el mejor");
 
+    try
+    {
         while (!juegoFinalizado)
         {
             var jugadorActual = jugadores[indiceActual];
@@ -90,12 +92,29 @@ public class Uno : JuegoBase
             indiceActual = (indiceActual + direccionTurnos + jugadores.Count) % jugadores.Count;
 
             // Registrar el turno
-            RegistrarAccion($"Turno finalizado. Próximo jugador: {jugadores[indiceActual].Nombre}");
+            RegistrarAccion($"Turno finalizado. Proximo jugador: {jugadores[indiceActual].Nombre}");
+        }
+    }
+    catch (InvalidOperationException ex)
+    {
+        // Si se alcanzó el límite de rebarajeos 
+        if (ex.Message.Contains("Empate"))
+        {
+            ConsolaLogger.Advertencia(" El juego terminó en empate: se alcanzo el límite de 10 rebarajeos.");
+        }
+        else
+        {
+            //  Si el mazo y descarte están realmente vacíos
+            ConsolaLogger.Error($"Error: {ex.Message}");
         }
 
-        ConsolaLogger.Mostrar("\nFin del juego.");
         FinalizarJuego();
     }
+
+    ConsolaLogger.Mostrar("\nFin del juego.");
+    FinalizarJuego();
+}
+
 // Devuelve la carta actual en la cima de la pila de descarte
 public CartaUno ObtenerCartaSuperior()
 {
