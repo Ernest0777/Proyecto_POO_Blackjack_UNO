@@ -1,8 +1,5 @@
-using System;
-
 namespace BlackJack_1.Estrategias;
 
-public class EstrategiaCautelosa
 using BlackJack_1.Interfaces;
 using BlackJack_1.Juegos.Blackjack;
 

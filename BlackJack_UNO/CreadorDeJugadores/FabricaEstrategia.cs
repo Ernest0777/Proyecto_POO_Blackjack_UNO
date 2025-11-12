@@ -1,8 +1,5 @@
-using System;
-
 namespace BlackJack_1.CreadorDeJugadores;
 
-public class FabricaEstrategia
 using BlackJack_1.Interfaces;
 using BlackJack_1.Estrategias;
 

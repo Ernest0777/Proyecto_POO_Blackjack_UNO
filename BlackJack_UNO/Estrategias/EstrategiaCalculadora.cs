@@ -52,12 +52,9 @@ public class EstrategiaCalculadora : IEstrategiaJugadorUno
                 return cartaMasCuatro;
             }
 
-            var cartaMasDos = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.MasDos);
             var cartaMasDosAtaque = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.MasDos);
             if (cartaMasDosAtaque != null)
             {
-                UltimaAccion = $"Usa {cartaMasDos} para arruinarle la diversion a {siguienteJugador.Nombre}";
-                return cartaMasDos;
                 UltimaAccion = $"Usa {cartaMasDosAtaque} para arruinarle la diversion a {siguienteJugador.Nombre}";
                 return cartaMasDosAtaque;
             }
@@ -69,13 +66,9 @@ public class EstrategiaCalculadora : IEstrategiaJugadorUno
                 return cartaBloqueo;
             }
 
-            var cartaReversa = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.Reversa);
-            if (cartaReversa != null)
             var cartaReversaAtaque = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.Reversa);
             if (cartaReversaAtaque != null)
             {
-                UltimaAccion = $"Invierte el sentido con {cartaReversa}";
-                return cartaReversa;
                 UltimaAccion = $"Invierte el sentido con {cartaReversaAtaque}";
                 return cartaReversaAtaque;
             }
@@ -98,13 +91,9 @@ public class EstrategiaCalculadora : IEstrategiaJugadorUno
         }
 
         // Si no tiene normales intenta usar cartas no ofensivas primero
-        var cartaReversa = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.Reversa);
-        if (cartaReversa != null)
         var cartaReversaNeutra = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.Reversa);
         if (cartaReversaNeutra != null)
         {
-            UltimaAccion = $"Usa {cartaReversa} para mantener el flujo";
-            return cartaReversa;
             UltimaAccion = $"Usa {cartaReversaNeutra} para mantener el flujo";
             return cartaReversaNeutra;
         }
@@ -146,13 +135,9 @@ public class EstrategiaCalculadora : IEstrategiaJugadorUno
         }
 
         // Si no tiene +4 busca un +2 como ultima opcion ofensiva
-        var cartaMasDos = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.MasDos);
-        if (cartaMasDos != null)
         var cartaMasDosFinal = cartasJugables.FirstOrDefault(c => c.Tipo == TipoCartaUno.MasDos);
         if (cartaMasDosFinal != null)
         {
-            UltimaAccion = $"Usa {cartaMasDos} para limpiar el mazo";
-            return cartaMasDos;
             UltimaAccion = $"Usa {cartaMasDosFinal} para limpiar el mazo";
             return cartaMasDosFinal;
         }

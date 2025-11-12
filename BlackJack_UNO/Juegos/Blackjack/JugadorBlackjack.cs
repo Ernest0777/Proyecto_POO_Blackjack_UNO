@@ -5,8 +5,6 @@ using BlackJack_1.Interfaces;
 namespace BlackJack_1.Juegos.Blackjack;
 
 public class JugadorBlackjack : JugadorBase, IJugadorBlackjack
-   {
-    public IEstrategiaJugadorBlackjack Estrategia { get; set; }
 {
     // Estrategia puede ser nula (por ejemplo, en el caso del Dealer)
     public IEstrategiaJugadorBlackjack? Estrategia { get; set; }

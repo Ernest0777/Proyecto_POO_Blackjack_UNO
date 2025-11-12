@@ -36,7 +36,6 @@ public abstract class JuegoBase : IJuego
     }
 
     public virtual void RepartirCartas()
-        => RegistrarAccion("Repartiendo cartas...");
         => RegistrarAccion("Repartiendo cartas");
 
     public virtual void JugarTurno()
@@ -49,7 +48,6 @@ public abstract class JuegoBase : IJuego
     }
 
     public virtual void DeterminarGanador()
-        => RegistrarAccion("Determinando ganador...");
         => RegistrarAccion("Determinando ganador");
 
     public virtual void FinalizarJuego()
@@ -64,7 +62,6 @@ public abstract class JuegoBase : IJuego
             OnAccionRegistrada(descripcion);
     }
 
-     protected virtual bool ValidarJugadores()
     protected virtual bool ValidarJugadores()
     {
         if (NombreJuego.Equals("UNO", StringComparison.OrdinalIgnoreCase))
@@ -73,17 +70,13 @@ public abstract class JuegoBase : IJuego
         if (NombreJuego.Equals("Blackjack", StringComparison.OrdinalIgnoreCase))
             return _jugadores.Count >= 1;
 
-        // al menos un jugador
         return _jugadores.Count > 0;
     }
 
-
- protected virtual void BarajarMazo()
     protected virtual void BarajarMazo()
     {
         if (_mazo.Count == 0) return;
 
-        Randomizador.ObtenerInstancia().Barajar(_mazo);
         var cartasBarajadas = Randomizador.BarajarLista(_mazo);
         _mazo.Clear();
         _mazo.AddRange(cartasBarajadas);
