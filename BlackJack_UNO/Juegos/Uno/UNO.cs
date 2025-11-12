@@ -27,7 +27,7 @@ public class Uno : JuegoBase
 
         foreach (var tipo in tiposEstrategias)
         {
-            var jugador = creador.CrearJugadorUno($"Jugador_{tipo}", tipo);
+            var jugador = creador.CrearJugadorUno($"Jugador {jugadores.Count + 1} - {tipo}", tipo);
             jugadores.Add(jugador);
         }
 

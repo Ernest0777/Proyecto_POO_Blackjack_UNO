@@ -9,23 +9,29 @@ public static class ReglasUno
 {
     // Verifica si una carta puede jugarse sobre la carta actual en la pila de descarte
     public static bool PuedeJugar(CartaUno cartaSuperior, CartaUno cartaJugada)
-    {
-
-        // Siempre se puede jugar un comodín
+{
+    // Siempre se puede jugar un comodín
     if (cartaJugada.Color == "Negro")
         return true;
 
-    // Si la carta es del mismo color o valor que la superior
-    if (cartaJugada.Color == cartaSuperior.Color || cartaJugada.Valor == cartaSuperior.Valor)
+    // Si la carta superior era un comodín (+4 o cambio de color),
+    // consideramos el color elegido como color "activo"
+    string colorReferencia = cartaSuperior.Color;
+    if (colorReferencia == "Negro" && colorActualTemporal != null)
+        colorReferencia = colorActualTemporal;
+
+    // Mismo color activo o mismo valor
+    if (cartaJugada.Color == colorReferencia)
+        return true;
+    if (cartaJugada.Valor == cartaSuperior.Valor)
         return true;
 
-    // Si ambas son especiales del mismo tipo pero con color distinto
+    // Ambas son especiales del mismo tipo (bloqueo, reversa, etc.)
     if (cartaJugada.Tipo != TipoCartaUno.Normal && cartaJugada.Tipo == cartaSuperior.Tipo)
         return true;
 
-    // En cualquier otro caso no se puede jugar
     return false;
-    }
+}
 
     // Aplica los efectos de una carta especial
     public static void AplicarEfecto(
@@ -49,19 +55,22 @@ public static class ReglasUno
                 }
                 break;
 
-            case TipoCartaUno.MasCuatro:
-                // Siguiente jugador toma 4 cartas
-                if (colaJugadores.Count > 0)
-                {
-                    var siguiente = colaJugadores.Peek();
-                    for (int i = 0; i < 4; i++)
-                        siguiente.AgregarCarta(mazo.SacarCarta());
+           case TipoCartaUno.MasCuatro:
+        // Siguiente jugador toma 4 cartas
+        if (colaJugadores.Count > 0)
+        {
+            var siguiente = colaJugadores.Peek();
+            for (int i = 0; i < 4; i++)
+                siguiente.AgregarCarta(mazo.SacarCarta());
 
-                    ConsolaLogger.Mostrar($"{siguiente.Nombre} toma 4 cartas (+4).");
-                }
+            ConsolaLogger.Mostrar($"{siguiente.Nombre} toma 4 cartas (+4).");
+        }
 
-                CambiarColorInteligente(jugadorActual);
-                break;
+        // Luego del castigo el jugador cambia el color
+        var nuevoColorMas4 = CambiarColorInteligente(jugadorActual);
+        EstablecerColorActual(nuevoColorMas4);
+        ConsolaLogger.Mostrar($"{jugadorActual.Nombre} declara el nuevo color: {nuevoColorMas4}.");
+        break;
 
             case TipoCartaUno.Bloqueo:
                 ConsolaLogger.Mostrar("El siguiente jugador pierde su turno (Bloqueo).");
@@ -73,14 +82,14 @@ public static class ReglasUno
                 break;
 
             case TipoCartaUno.CambioColor:
-                CambiarColorInteligente(jugadorActual);
-                break;
+    var nuevoColorCambio = CambiarColorInteligente(jugadorActual);
+    EstablecerColorActual(nuevoColorCambio);
+    break;
         }
     }
 
-    private static void CambiarColorInteligente(JugadorUno jugadorActual)
+    private static string CambiarColorInteligente(JugadorUno jugadorActual)
 {
-    // Agrupa las cartas por color (exceptuando los comodines negros)
     var gruposPorColor = jugadorActual.ObtenerMano()
         .Where(c => c.Color != "Negro")
         .GroupBy(c => c.Color)
@@ -91,31 +100,37 @@ public static class ReglasUno
 
     if (gruposPorColor.Count == 0)
     {
-        // Si solo tiene comodines elige al azar
         string[] coloresDisponibles = { "Rojo", "Azul", "Verde", "Amarillo" };
         colorElegido = coloresDisponibles[new Random().Next(coloresDisponibles.Length)];
         ConsolaLogger.Mostrar($"{jugadorActual.Nombre} no tiene cartas de color, cambia al azar a {colorElegido}.");
     }
     else
     {
-        // Encuentra el maximo numero de cartas de un color
         int maxCantidad = gruposPorColor.Max(g => g.Cantidad);
-
         var coloresMaximos = gruposPorColor
             .Where(g => g.Cantidad == maxCantidad)
             .Select(g => g.Color)
             .ToList();
 
-        // Si hay empate, elige al azar entre los colores con mayor cantidad
-        if (coloresMaximos.Count > 1)
-            colorElegido = coloresMaximos[new Random().Next(coloresMaximos.Count)];
-        else
-            colorElegido = coloresMaximos.First();
+        colorElegido = coloresMaximos.Count > 1
+            ? coloresMaximos[new Random().Next(coloresMaximos.Count)]
+            : coloresMaximos.First();
 
-        ConsolaLogger.Mostrar($"{jugadorActual.Nombre} cambia el color a {colorElegido} (elige el color donde tiene más cartas).");
+        ConsolaLogger.Mostrar($"{jugadorActual.Nombre} cambia el color a {colorElegido} (elige donde tiene más cartas).");
     }
+
+    // 🔹 Guardar color activo para las siguientes jugadas
+    EstablecerColorActual(colorElegido);
+    return colorElegido;
 }
 
+    // Guarda el color declarado tras jugar un comodin
+    private static string? colorActualTemporal;
+
+public static void EstablecerColorActual(string nuevoColor)
+{
+    colorActualTemporal = nuevoColor;
+}
 
     // Verifica si el jugador no tiene cartas (condición de victoria)
     public static bool HaGanado(JugadorUno jugador)
