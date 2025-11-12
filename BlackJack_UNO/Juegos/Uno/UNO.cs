@@ -15,7 +15,10 @@ public class Uno : JuegoBase
     private int indiceActual = 0;
     private bool juegoFinalizado = false;
 
-    public Uno() : base("UNO") { }
+    public Uno() : base("UNO")
+    {
+        mazo.PilaDeDescarte = pilaDescarte;
+    }
 
     // Crea los jugadores y les reparte sus cartas iniciales.
     public void ConfigurarJugadores(IEnumerable<string> tiposEstrategias)
@@ -43,6 +46,13 @@ public override void IniciarJuego()
 {
     ConsolaLogger.Mostrar("Comienza el juego de UNO, mucha suerte jugadores, que gane el mejor");
 
+    // 🔹 Mostrar manos iniciales
+    foreach (var jugador in jugadores)
+    {
+        var cartasIniciales = string.Join(", ", jugador.ObtenerMano());
+        ConsolaLogger.Mostrar($"{jugador.Nombre} inicia con: {cartasIniciales}");
+    }
+
     try
     {
         while (!juegoFinalizado)
@@ -51,6 +61,10 @@ public override void IniciarJuego()
             var cartaSuperior = pilaDescarte.Peek();
 
             ConsolaLogger.Mostrar($"\nTurno de {jugadorActual.Nombre}:");
+            var cartasEnMano = string.Join(", ", jugadorActual.ObtenerMano());
+            ConsolaLogger.Mostrar($"🃏 Mano actual: {cartasEnMano}");
+            ConsolaLogger.Mostrar($"Carta superior: {cartaSuperior}");
+
             var cartaSeleccionada = jugadorActual.Estrategia.DecidirCarta(jugadorActual, cartaSuperior);
 
             if (cartaSeleccionada != null && ReglasUno.PuedeJugar(cartaSuperior, cartaSeleccionada))
@@ -78,35 +92,29 @@ public override void IniciarJuego()
 
                 // Grita UNO si tiene solo una carta
                 if (jugadorActual.ObtenerMano().Count() == 1)
-                    ConsolaLogger.Mostrar($"{jugadorActual.Nombre} grita: ¡UNOOOOOO!");
+                    ConsolaLogger.Mostrar($"{jugadorActual.Nombre} grita: UNOOOOOO");
             }
             else
             {
-                // Si no puede jugar, roba una carta
+                // Si no puede jugar roba una carta
                 var cartaTomada = mazo.SacarCarta();
                 jugadorActual.AgregarCarta(cartaTomada);
                 ConsolaLogger.Mostrar($"{jugadorActual.Nombre} no puede jugar y toma una carta ({cartaTomada}).");
             }
 
-            // Cambiar al siguiente jugador (considerando la dirección del juego)
+            // Cambiar al siguiente jugador
             indiceActual = (indiceActual + direccionTurnos + jugadores.Count) % jugadores.Count;
 
-            // Registrar el turno
+            // Registrar turno
             RegistrarAccion($"Turno finalizado. Proximo jugador: {jugadores[indiceActual].Nombre}");
         }
     }
     catch (InvalidOperationException ex)
     {
-        // Si se alcanzó el límite de rebarajeos 
         if (ex.Message.Contains("Empate"))
-        {
-            ConsolaLogger.Advertencia(" El juego terminó en empate: se alcanzo el límite de 10 rebarajeos.");
-        }
+            ConsolaLogger.Advertencia(" El juego termino en empate se alcanzo el límite de 10 rebarajeos.");
         else
-        {
-            //  Si el mazo y descarte están realmente vacíos
             ConsolaLogger.Error($"Error: {ex.Message}");
-        }
 
         FinalizarJuego();
     }

@@ -11,10 +11,20 @@ public static class ReglasUno
     public static bool PuedeJugar(CartaUno cartaSuperior, CartaUno cartaJugada)
     {
 
-        return cartaJugada.Color == cartaSuperior.Color
-            || cartaJugada.Valor == cartaSuperior.Valor
-            || cartaJugada.Tipo == cartaSuperior.Tipo
-            || cartaJugada.Color == "Negro";
+        // Siempre se puede jugar un comodín
+    if (cartaJugada.Color == "Negro")
+        return true;
+
+    // Si la carta es del mismo color o valor que la superior
+    if (cartaJugada.Color == cartaSuperior.Color || cartaJugada.Valor == cartaSuperior.Valor)
+        return true;
+
+    // Si ambas son especiales del mismo tipo pero con color distinto
+    if (cartaJugada.Tipo != TipoCartaUno.Normal && cartaJugada.Tipo == cartaSuperior.Tipo)
+        return true;
+
+    // En cualquier otro caso no se puede jugar
+    return false;
     }
 
     // Aplica los efectos de una carta especial
