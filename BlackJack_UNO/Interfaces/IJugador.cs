@@ -14,8 +14,6 @@ public interface IJugador
         
         IReadOnlyList<ICarta> Mano{ get; }
 
-        IEstrategiaJugador Estrategia { get; set; }
-
         void NotificarAccion(string mensaje);
 
     event Action<string>? OnAccionReportada;
