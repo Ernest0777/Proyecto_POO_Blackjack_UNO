@@ -1,5 +1,5 @@
 using BlackJack_1.Interfaces;
-
+using BlackJack_1.ModelosBase;
 namespace BlackJack_1.Juegos.Blackjack
 {
     public class Dealer : JugadorBlackjack
@@ -8,8 +8,8 @@ namespace BlackJack_1.Juegos.Blackjack
 
         public void BarajarMazo(MazoBlackjack mazo)
         {
-            mazo.Mezclar();
-            NotificarAccion("barajó el mazo.");
+            mazo.Barajar();
+        NotificarAccion("barajo el mazo.");
         }
 
         public override void TomarDecision(IJuego juegoContexto)
@@ -19,9 +19,10 @@ namespace BlackJack_1.Juegos.Blackjack
 
             while (ObtenerPuntos() < 17)
             {
-                var carta = blackjack.Mazo.RobarCarta();
-                RecibirCarta(carta);
-            }
+                var carta = blackjack.Mazo.SacarCarta();
+            RecibirCarta(carta);
+            NotificarAccion($"recibio {carta} (total: {ObtenerPuntos()} puntos).");
+        }
 
             NotificarAccion($"terminó su turno con {ObtenerPuntos()} puntos.");
         }
