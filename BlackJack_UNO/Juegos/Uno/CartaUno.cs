@@ -7,6 +7,7 @@ using BlackJack_1.Interfaces;
 public class CartaUno : Carta
 {
     public TipoCartaUno Tipo { get; }
+    public new TipoCartaUno Tipo { get; }
 
     // Constructor: define el color  valor y tipo
     public CartaUno(string color, string valor, TipoCartaUno tipo)

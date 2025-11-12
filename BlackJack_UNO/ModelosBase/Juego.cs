@@ -1,7 +1,9 @@
 namespace BlackJack_1.ModelosBase;
+
 using System;
 using System.Collections.Generic;
 using BlackJack_1.Interfaces;
+using BlackJack_1.Utilidades;
 
 public abstract class JuegoBase : IJuego
 {
@@ -35,6 +37,7 @@ public abstract class JuegoBase : IJuego
 
     public virtual void RepartirCartas()
         => RegistrarAccion("Repartiendo cartas...");
+        => RegistrarAccion("Repartiendo cartas");
 
     public virtual void JugarTurno()
         => RegistrarAccion($"Turno del jugador #{TurnoActual + 1}");
@@ -47,6 +50,7 @@ public abstract class JuegoBase : IJuego
 
     public virtual void DeterminarGanador()
         => RegistrarAccion("Determinando ganador...");
+        => RegistrarAccion("Determinando ganador");
 
     public virtual void FinalizarJuego()
         => RegistrarAccion($"Finalizando {NombreJuego}");
@@ -61,6 +65,7 @@ public abstract class JuegoBase : IJuego
     }
 
      protected virtual bool ValidarJugadores()
+    protected virtual bool ValidarJugadores()
     {
         if (NombreJuego.Equals("UNO", StringComparison.OrdinalIgnoreCase))
             return _jugadores.Count >= Constantes.NumeroJugadoresMinimoUno;
@@ -74,10 +79,14 @@ public abstract class JuegoBase : IJuego
 
 
  protected virtual void BarajarMazo()
+    protected virtual void BarajarMazo()
     {
         if (_mazo.Count == 0) return;
 
         Randomizador.ObtenerInstancia().Barajar(_mazo);
+        var cartasBarajadas = Randomizador.BarajarLista(_mazo);
+        _mazo.Clear();
+        _mazo.AddRange(cartasBarajadas);
 
         RegistrarAccion("El mazo ha sido barajado.");
     }

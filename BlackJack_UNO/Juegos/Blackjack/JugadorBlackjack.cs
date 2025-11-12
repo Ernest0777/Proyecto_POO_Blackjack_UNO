@@ -7,9 +7,12 @@ namespace BlackJack_1.Juegos.Blackjack;
 public class JugadorBlackjack : JugadorBase, IJugadorBlackjack
    {
     public IEstrategiaJugadorBlackjack Estrategia { get; set; }
+{
+    // Estrategia puede ser nula (por ejemplo, en el caso del Dealer)
+    public IEstrategiaJugadorBlackjack? Estrategia { get; set; }
 
     // constructor recibe id nombre y la estrategia concreta
-    public JugadorBlackjack(int id, string nombre, IEstrategiaJugadorBlackjack estrategia)
+    public JugadorBlackjack(int id, string nombre, IEstrategiaJugadorBlackjack? estrategia)
         : base(id, nombre)
     {
         Estrategia = estrategia;
@@ -39,6 +42,3 @@ public class JugadorBlackjack : JugadorBase, IJugadorBlackjack
         return puntosTotales;
     }
 }
-
-
-

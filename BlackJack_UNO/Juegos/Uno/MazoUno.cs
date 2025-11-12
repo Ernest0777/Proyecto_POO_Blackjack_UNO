@@ -5,6 +5,7 @@ using BlackJack_1.ModelosBase;
 using BlackJack_1.Interfaces;
 
 public class MazoUno : Mazo<CartaUno>, IMazo
+public class MazoUno : Mazo<CartaUno>, IMazo<CartaUno>
 {
     public MazoUno()
     {
@@ -39,6 +40,8 @@ public class MazoUno : Mazo<CartaUno>, IMazo
             }
         }
             // Comodines negros +4 y Cambio de color 4 de cada uno
+
+        // Comodines negros +4 y Cambio de color 4 de cada uno
         for (int i = 0; i < 4; i++)
         {
             AgregarCarta(new CartaUno("Negro", "+4", TipoCartaUno.MasCuatro));
