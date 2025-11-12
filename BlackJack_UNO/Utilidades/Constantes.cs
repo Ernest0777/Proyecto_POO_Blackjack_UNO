@@ -10,7 +10,7 @@ public class Constantes
     public const int CartasInicialesBlackjack = 2;
 
     // uno
-    public const int CartasInicialesUno = 7;
+    public const int CartasInicialesUno = 4;
     public const int NumeroJugadoresMinimoUno = 2;
 
     // generales
