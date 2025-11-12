@@ -11,7 +11,7 @@ public class Blackjack : JuegoBase, IJuego
 {
     private readonly List<IJugador> jugadores;
     public Dealer Dealer { get; }
-    public MazoBlackjack Mazo { get; }
+    public MazoBlackjack MazoBlackjack { get; }
 
     public bool JuegoFinalizado { get; private set; }
 
@@ -19,7 +19,7 @@ public class Blackjack : JuegoBase, IJuego
         : base("Blackjack")
     {
         jugadores = jugadoresParticipantes?.ToList() ?? new List<IJugador>();
-        Mazo = new MazoBlackjack();
+        MazoBlackjack = new MazoBlackjack();
         Dealer = new Dealer(0, Constantes.NombreDealer);
     }
 
@@ -46,11 +46,11 @@ public class Blackjack : JuegoBase, IJuego
         foreach (var jugador in jugadores)
         {
             for (int i = 0; i < Constantes.CartasInicialesBlackjack; i++)
-                jugador.RecibirCarta(Mazo.SacarCarta());
+                jugador.RecibirCarta(MazoBlackjack.SacarCarta());
         }
 
         for (int i = 0; i < Constantes.CartasInicialesBlackjack; i++)
-            Dealer.RecibirCarta(Mazo.SacarCarta());
+            Dealer.RecibirCarta(MazoBlackjack.SacarCarta());
 
         RegistrarAccion("Se repartieron las cartas iniciales.");
     }
@@ -103,7 +103,7 @@ public class Blackjack : JuegoBase, IJuego
 
     public override void RegistrarAccion(string descripcion)
     {
-        if (OnAccionRegistrada != null)
-            OnAccionRegistrada($"[Blackjack] {descripcion}");
+            base.RegistrarAccion($"[Blackjack] {descripcion}");
+
     }
 }

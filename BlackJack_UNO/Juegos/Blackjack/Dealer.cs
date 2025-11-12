@@ -21,7 +21,7 @@ namespace BlackJack_1.Juegos.Blackjack
 
             while (ObtenerPuntos() < Constantes.PuntosDealerPlantarse)
             {
-                var carta = blackjack.Mazo.SacarCarta();
+                var carta = blackjack.MazoBlackjack.SacarCarta();
             RecibirCarta(carta);
             NotificarAccion($"recibio {carta} (total: {ObtenerPuntos()} puntos).");
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BlackJack_1.Interfaces;
 
-public interface IMazo
+public interface IMazo<TipoCarta> where TipoCarta : ICarta
 {
     // Mezcla las cartas actuales del mazo
     void Barajar();
@@ -12,8 +12,8 @@ public interface IMazo
     int CartasRestantes();
 
     // Saca la carta superior del mazo
-    ICarta SacarCarta();
+    TipoCarta SacarCarta();
 
     // Devuelve una lista con las cartas actuales solo para pruebas 
-    IEnumerable<ICarta> MostrarCartas();
+    IEnumerable<TipoCarta> MostrarCartas();
 }

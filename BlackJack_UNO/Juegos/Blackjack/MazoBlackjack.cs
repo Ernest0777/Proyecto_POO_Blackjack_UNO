@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using BlackJack_1.ModelosBase;
 using BlackJack_1.Interfaces;
 
-public class MazoBlackjack : Mazo<CartaBlackjack>, IMazo
+public class MazoBlackjack : Mazo<CartaBlackjack>, IMazo<CartaBlackjack>
     {
        public MazoBlackjack()
     {
@@ -19,6 +19,6 @@ public class MazoBlackjack : Mazo<CartaBlackjack>, IMazo
 
         foreach (var figura in figuras)
             foreach (var valor in valores)
-                AgregarCarta(new CartaBlackjack(figura, valor, "Blackjack"));
+                AgregarCarta(new CartaBlackjack(figura, valor));
     }
 }
